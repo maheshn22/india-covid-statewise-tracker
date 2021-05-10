@@ -23,6 +23,8 @@ function App() {
     } 
   }
   
+  const [, updateState] = React.useState();
+const forceUpdate = React.useCallback(() => updateState({}), []);
 
   
   
@@ -38,42 +40,51 @@ function App() {
         recovered: stats[region].total.recovered,
         deaths: stats[region].total.deceased,
         vaccinated: stats[region].total.vaccinated,
-        vaccinatedPercent: ((stats[region].total.vaccinated / stats[region].meta.population)*100).toFixed(2) + " %",
+        vaccinatedPercent: parseFloat(((stats[region].total.vaccinated / stats[region].meta.population)*100).toFixed(2)),
       }
       tempArray.push(tempRegion);
     })
-  console.log(tempArray);
+  // console.log(tempArray);
 
 
   // setRegionsData(tempArray);
 
-  console.log(regionsData);
+  // console.log(regionsData);
 
 
     let tempObject  = tempArray.filter(item => item.region == 'TT');
     setIndiaStats(tempObject);
     // console.log(tempObject)
     tempArray = tempArray.filter(item => item.region != 'TT');
-    console.log(tempArray)
+    // console.log(tempArray)
 
     let sortedArray = tempArray.sort((a,b) => {
       return b.cases - a.cases;
     })
     setRegionsData(sortedArray);
 
+    }
+    storeRegions();
+    // sortRegions();
+
+  },[regions]);
+
+  const [sortToggle,setSortToggle] = useState(true)
+  const sortBy = (criteria) => {
+    
+    console.log(criteria);
+    let sortedArray = regionsData.sort((a,b) => {
+      if(sortToggle) {
+        return b[criteria] > a[criteria] ? 1 : -1;
+      } else return a[criteria] > b[criteria] ? 1 : -1;
+    })
+    
+    setSortToggle(!sortToggle);
+
+    console.log(sortedArray[0])
+    setRegionsData(sortedArray)
+    forceUpdate();
   }
-  storeRegions();
-  // sortRegions();
-
-},[regions]);
-
-const sortRegions = () => {
-  let sortedArray = regionsData.sort((a,b) => {
-    return b.cases - a.cases;
-  })
-  setRegionsData(sortedArray);
-  console.log(regionsData)
-} 
 
 
   useEffect(() => {
@@ -88,13 +99,13 @@ const sortRegions = () => {
     <table className="table">
 
       <tr className="top-row">
-        <td className="state">State</td>
-        <td className="cases">Cases</td>
-        <td className="active">Active</td>
-        <td className="recovered">Recovered</td>
-        <td className="deaths">Deaths</td>
-        <td className="vaccinated">Vaccinated</td>
-        <td className="vaccinated-percent">Vaccinated %</td>
+        <td onClick={() => sortBy("region")} className="state">State</td>
+        <td onClick={() => sortBy("cases")} className="cases">Cases</td>
+        <td onClick={() => sortBy("active")} className="active">Active</td>
+        <td onClick={() => sortBy("recovered")} className="recovered">Recovered</td>
+        <td onClick={() => sortBy("deaths")} className="deaths">Deaths</td>
+        <td onClick={() => sortBy("vaccinated")} className="vaccinated">Vaccinated</td>
+        <td onClick={() => sortBy("vaccinatedPercent")} className="vaccinated-percent">Vaccinated %</td>
       </tr>
 
       {regionsData.map((region)=> {
@@ -108,7 +119,7 @@ const sortRegions = () => {
               <td>{region.recovered}</td>
               <td>{region.deaths}</td>
               <td>{region.vaccinated}</td>
-              <td>{region.vaccinatedPercent}</td>
+              <td>{region.vaccinatedPercent} %</td>
             </tr>
           </tbody>
           )
@@ -116,15 +127,6 @@ const sortRegions = () => {
         }
 
       )}
-           {/*regions&&
-          regionsData.map((region) => {
-            return(
-                  <tr>
-                    <td>{region.name}</td>
-                    
-                  </tr>
-            )
-          })*/}
           
     </table>
 
