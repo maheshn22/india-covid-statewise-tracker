@@ -1,0 +1,42 @@
+.table {
+	text-align: center;
+	margin: 0 5px 0 5px;
+}
+
+.table .top-row {
+	font-weight: 600;
+}
+
+.table td {
+	padding: 1px 10px;
+}
+
+.state {
+	background-color: lightgray;
+}
+
+.cases {
+	background-color:gold;
+}
+
+.active {
+	background-color: lightblue;
+}
+
+.recovered {
+	background-color: lightgreen;
+}
+
+.deaths {
+	background-color: lightcoral;
+}
+
+.vaccinated {
+	background-color: lightpink;
+}
+
+.vaccinated-percent {
+	background-color: hotpink;
+}
+
+
