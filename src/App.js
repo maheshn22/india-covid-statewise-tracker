@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import './App.css';
 import './Home.css';
+import { green } from '@material-ui/core/colors';
 
 
 function App() {
@@ -41,6 +42,15 @@ const forceUpdate = React.useCallback(() => updateState({}), []);
         deaths: stats[region].total.deceased,
         vaccinated: stats[region].total.vaccinated,
         vaccinatedPercent: parseFloat(((stats[region].total.vaccinated / stats[region].meta.population)*100).toFixed(2)),
+        casesToday: (typeof stats[region].delta != 'undefined') ? stats[region].delta.confirmed : Math.round(stats[region].delta7.confirmed /7) ,
+        activeToday: (typeof stats[region].delta != 'undefined') ? (stats[region].delta.confirmed -stats[region].delta.recovered - stats[region].delta.deceased) 
+          : Math.round((stats[region].delta7.confirmed -stats[region].delta7.recovered - stats[region].delta7.deceased)/7),
+        recoveredToday: (typeof  stats[region].delta != 'undefined') ? stats[region].delta.recovered : Math.round(stats[region].delta7.recovered/7),
+        deathsToday: (typeof stats[region].delta != 'undefined') ? stats[region].delta.deceased : Math.round(stats[region].delta7.deceased/7),
+        casesWeekly: Math.round(stats[region].delta7.confirmed /7) ,
+        activeWeekly: Math.round((stats[region].delta7.confirmed -stats[region].delta7.recovered - stats[region].delta7.deceased)/7),
+        recoveredWeekly: Math.round(stats[region].delta7.recovered/7),
+        deathsWeekly: Math.round(stats[region].delta7.deceased/7),
       }
       tempArray.push(tempRegion);
     })
@@ -114,12 +124,18 @@ const forceUpdate = React.useCallback(() => updateState({}), []);
           <tbody>
             <tr>
               <td>{region.region}</td>
-              <td>{region.cases}</td>
-              <td>{region.active}</td>
-              <td>{region.recovered}</td>
-              <td>{region.deaths}</td>
-              <td>{region.vaccinated}</td>
-              <td>{region.vaccinatedPercent} %</td>
+              <td>{region.cases} &nbsp;<span className="redText">+{region.casesToday}</span></td>
+              <td style={{color: "#5074a0"}}>{region.active} &nbsp;
+              {region.activeToday > 0 ?
+                <span className="redText">+{region.activeToday}</span>
+                : 
+                <span className="greenText">-{region.activeToday*-1}</span>
+              }
+              </td>
+              <td style={{color: "forestgreen"}}>{region.recovered} &nbsp;<span className="greenText">+{region.recoveredToday}</span></td>
+              <td style={{color: "darkred"}}>{region.deaths} &nbsp;<span className="redText">+{region.deathsToday}</span></td>
+              <td style={{color: "#980147"}}>{region.vaccinated}</td>
+              <td style={{color: "#570029"}}>{region.vaccinatedPercent} %</td>
             </tr>
           </tbody>
           )

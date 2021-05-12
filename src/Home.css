@@ -7,6 +7,10 @@
 	font-weight: 600;
 }
 
+	tr {
+	border-bottom: 1px black solid;
+}
+
 .table td {
 	padding: 1px 10px;
 }
@@ -37,6 +41,21 @@
 
 .vaccinated-percent {
 	background-color: hotpink;
+	color: #570029;
 }
 
+td span {
+	font-size: 14px;
+}
 
+.redText {
+	color: darkred;
+	font-size: 14;
+	font-weight: 500;
+}
+
+.greenText {
+	color: forestgreen;
+	font-size: 14;
+	font-weight: 500;
+}
