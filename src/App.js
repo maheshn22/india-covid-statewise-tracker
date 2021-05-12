@@ -42,11 +42,30 @@ const forceUpdate = React.useCallback(() => updateState({}), []);
         deaths: stats[region].total.deceased,
         vaccinated: stats[region].total.vaccinated,
         vaccinatedPercent: parseFloat(((stats[region].total.vaccinated / stats[region].meta.population)*100).toFixed(2)),
-        casesToday: (typeof stats[region].delta != 'undefined') ? stats[region].delta.confirmed : Math.round(stats[region].delta7.confirmed /7) ,
-        activeToday: (typeof stats[region].delta != 'undefined') ? (stats[region].delta.confirmed -stats[region].delta.recovered - stats[region].delta.deceased) 
-          : Math.round((stats[region].delta7.confirmed -stats[region].delta7.recovered - stats[region].delta7.deceased)/7),
-        recoveredToday: (typeof  stats[region].delta != 'undefined') ? stats[region].delta.recovered : Math.round(stats[region].delta7.recovered/7),
-        deathsToday: (typeof stats[region].delta != 'undefined') ? stats[region].delta.deceased : Math.round(stats[region].delta7.deceased/7),
+        casesToday: (typeof stats[region].delta != 'undefined') ? 
+        ( stats[region].delta.recovered&&stats[region].delta.deceased&&stats[region].delta.confirmed 
+          ? stats[region].delta.confirmed 
+          : Math.round(stats[region].delta7.confirmed /7) )
+          : Math.round(stats[region].delta7.confirmed /7) ,
+        activeToday: (typeof stats[region].delta != 'undefined') ? 
+        ( stats[region].delta.recovered&&stats[region].delta.deceased&&stats[region].delta.confirmed 
+          ? (stats[region].delta.confirmed -stats[region].delta.recovered - stats[region].delta.deceased) 
+          : Math.round((stats[region].delta7.confirmed - stats[region].delta7.recovered - 
+            (stats[region].delta7.deceased ? stats[region].delta7.deceased : 0 ) )/7)
+         )
+          :Math.round((stats[region].delta7.confirmed - stats[region].delta7.recovered - 
+            (stats[region].delta7.deceased ? stats[region].delta7.deceased : 0 ) )/7
+          ),
+        recoveredToday: (typeof  stats[region].delta != 'undefined') ? 
+        ( stats[region].delta.recovered&&stats[region].delta.deceased&&stats[region].delta.confirmed 
+          ? stats[region].delta.recovered 
+          : Math.round(stats[region].delta7.recovered /7) )
+        : Math.round(stats[region].delta7.recovered/7),
+        deathsToday: (typeof stats[region].delta != 'undefined') 
+        ? ( stats[region].delta.recovered&&stats[region].delta.deceased&&stats[region].delta.confirmed 
+          ? stats[region].delta.deceased 
+          : (Math.round(stats[region].delta7.deceased/7) ? Math.round(stats[region].delta7.deceased/7) : 0) )
+        : (Math.round(stats[region].delta7.deceased/7) ? Math.round(stats[region].delta7.deceased/7) : 0),
         casesWeekly: Math.round(stats[region].delta7.confirmed /7) ,
         activeWeekly: Math.round((stats[region].delta7.confirmed -stats[region].delta7.recovered - stats[region].delta7.deceased)/7),
         recoveredWeekly: Math.round(stats[region].delta7.recovered/7),
