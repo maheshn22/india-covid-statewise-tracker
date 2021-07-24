@@ -4,5 +4,5 @@ This is a India Covid Statewise Tracker, which reflects live data such as active
 
 Click on the colored Headers to sort the data according to that parameter. 
 
-Feel free to contribute to it by improving design.
+Feel free to contribute to it by improving the design.
 
