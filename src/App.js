@@ -27,6 +27,7 @@ function App() {
   const [, updateState] = React.useState();
 const forceUpdate = React.useCallback(() => updateState({}), []);
 
+
   
   
   useEffect(() => {
@@ -40,8 +41,9 @@ const forceUpdate = React.useCallback(() => updateState({}), []);
         active: stats[region].total.confirmed - stats[region].total.recovered - stats[region].total.deceased,
         recovered: stats[region].total.recovered,
         deaths: stats[region].total.deceased,
-        vaccinated: stats[region].total.vaccinated,
-        vaccinatedPercent: parseFloat(((stats[region].total.vaccinated / stats[region].meta.population)*100).toFixed(2)),
+        vaccinated: stats[region].total.vaccinated1,
+        vaccinatedPercent: parseFloat(((stats[region].total.vaccinated1 / stats[region].meta.population)*100).toFixed(2)),
+        vaccinatedPercent2: parseFloat(((stats[region].total.vaccinated2 / stats[region].meta.population)*100).toFixed(2)),
         casesToday: (typeof stats[region].delta != 'undefined') ? 
         ( stats[region].delta.recovered&&stats[region].delta.deceased&&stats[region].delta.confirmed 
           ? stats[region].delta.confirmed 
@@ -124,17 +126,42 @@ const forceUpdate = React.useCallback(() => updateState({}), []);
     <div className="App">
 
     <h1>India Statewise Covid Cases - Live</h1>
+    {console.log(stats)}
+    
+  {/*  <table className="table">      
+  <br/>
+      <tbody>
+        <tr>
+          <td>India</td>
+          <td>{indiaStats.cases} &nbsp;<span className="redText">+{indiaStats.casesToday}</span></td>
+          <td style={{color: "#5074a0"}}>{indiaStats.active} &nbsp;
+          {indiaStats.activeToday > 0 ?
+            <span className="redText">+{indiaStats.activeToday}</span>
+            : 
+            <span className="greenText">-{indiaStats.activeToday*-1}</span>
+          }
+          </td>
+          <td style={{color: "forestgreen"}}>{indiaStats.recovered} &nbsp;<span className="greenText">+{indiaStats.recoveredToday}</span></td>
+          <td style={{color: "darkred"}}>{indiaStats.deaths} &nbsp;<span className="redText">+{indiaStats.deathsToday}</span></td>
+          {/*<td style={{color: "#980147"}}>{region.vaccinated}</td>}
+          <td style={{color: "#570029"}}>{indiaStats.vaccinatedPercent} %</td>
+          <td style={{color: "#570029"}}>{indiaStats.vaccinatedPercent2} %</td>
+        </tr>
+      </tbody>          
+        </table> */}
+    
     <br/>
     <table className="table">
 
       <tr className="top-row">
         <td onClick={() => sortBy("region")} className="state">State</td>
-        <td onClick={() => sortBy("cases")} className="cases">Cases</td>
-        <td onClick={() => sortBy("active")} className="active">Active</td>
+        <td onClick={() => sortBy("cases")} className="cases">Total Cases</td>
+        <td onClick={() => sortBy("active")} className="active">Active Cases</td>
         <td onClick={() => sortBy("recovered")} className="recovered">Recovered</td>
         <td onClick={() => sortBy("deaths")} className="deaths">Deaths</td>
-        <td onClick={() => sortBy("vaccinated")} className="vaccinated">Vaccinated</td>
-        <td onClick={() => sortBy("vaccinatedPercent")} className="vaccinated-percent">Vaccinated %</td>
+        {/*<td onClick={() => sortBy("vaccinated")} className="vaccinated">Vaccinated</td>*/}
+        <td onClick={() => sortBy("vaccinatedPercent")} className="vaccinated-percent">Vaccinated-1</td>
+        <td onClick={() => sortBy("vaccinatedPercent")} className="vaccinated-percent">Vaccinated-2</td>
       </tr>
 
       {regionsData.map((region)=> {
@@ -153,8 +180,9 @@ const forceUpdate = React.useCallback(() => updateState({}), []);
               </td>
               <td style={{color: "forestgreen"}}>{region.recovered} &nbsp;<span className="greenText">+{region.recoveredToday}</span></td>
               <td style={{color: "darkred"}}>{region.deaths} &nbsp;<span className="redText">+{region.deathsToday}</span></td>
-              <td style={{color: "#980147"}}>{region.vaccinated}</td>
+              {/*<td style={{color: "#980147"}}>{region.vaccinated}</td>*/}
               <td style={{color: "#570029"}}>{region.vaccinatedPercent} %</td>
+              <td style={{color: "#570029"}}>{region.vaccinatedPercent2} %</td>
             </tr>
           </tbody>
           )
